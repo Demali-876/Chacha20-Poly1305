@@ -1,14 +1,14 @@
 {
   "canisters": {
     "Chacha20-Poly1305-backend": {
-      "main": "src/Chacha20-Poly1305-backend/main.mo",
+      "main": "src/main.mo",
       "type": "motoko"
     }
   },
   "defaults": {
     "build": {
       "args": "",
-      "packtool": ""
+      "packtool": "mops sources"
     }
   },
   "output_env_file": ".env",
