@@ -2,7 +2,7 @@ import Chacha20 "Chacha20";
 import Debug "mo:base/Debug";
 import Blob "mo:base/Blob";
 import Poly1305 "Poly1305";
-import Chacha20_poly1305 "Chacha20_Poly1305";
+import Chacha20_poly1305 "lib";
 import Nat32 "mo:base/Nat32";
 import Nat8 "mo:base/Nat8";
 import Nat "mo:base/Nat";
