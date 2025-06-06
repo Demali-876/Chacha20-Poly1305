@@ -121,7 +121,7 @@ module Chacha20 {
     let length = plaintext.size();
     assert (keystream.size() >= length); // Ensure keystream is long enough
 
-    return Array.tabulate<Nat8>(
+    Array.tabulate<Nat8>(
       length,
       func(i) {
         plaintext[i] ^ keystream[i]
@@ -164,7 +164,7 @@ module Chacha20 {
       i += 1
     };
 
-    return Array.freeze(ciphertext)
+    Array.freeze(ciphertext)
   };
 
   // Utility function to create a key array from byte array
@@ -176,7 +176,7 @@ module Chacha20 {
       key[i] := bytesToNat32(keyBytes, i * 4)
     };
 
-    return Array.freeze(key)
+    Array.freeze(key)
   };
 
   // Utility function to create a nonce array from byte array

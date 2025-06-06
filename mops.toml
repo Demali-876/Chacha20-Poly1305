@@ -1,5 +1,5 @@
 [package]
-name = "chacha20-poly1305"
+name = "Chacha"
 version = "1.0.0"
 description = ""
 repository = "https://github.com/Demali-876/json"

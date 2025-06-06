@@ -28,7 +28,7 @@ module {
     for (i in Iter.range(0, bytes.size() - 1)) {
       result += Nat.pow(256, i) * Nat8.toNat(bytes[i])
     };
-    return result
+    result
   };
 
   /// Convert Nat to little-endian bytes
@@ -39,7 +39,7 @@ module {
       func(i) {
         let byte = Nat8.fromNat(remaining % 256);
         remaining := remaining / 256;
-        return byte
+        byte
       }
     )
   };
@@ -56,7 +56,7 @@ module {
     // Next 16 bytes for s
     let s = Array.subArray<Nat8>(keystream, 16, 16);
 
-    return (rClamped, s)
+    (rClamped, s)
   };
 
   public func mac(key : [Nat8], msg : [Nat8]) : [Nat8] {
@@ -112,7 +112,7 @@ module {
 
     accumulator := (accumulator + sInt) % Nat.pow(2, 128);
 
-    return nat2LeBytes(accumulator, 16)
+    nat2LeBytes(accumulator, 16)
   };
 
   public func verify(tag1 : [Nat8], tag2 : [Nat8]) : Bool {
@@ -123,7 +123,7 @@ module {
       result |= (tag1[i] ^ tag2[i])
     };
 
-    return result == 0
+    result == 0
   };
   public func bytesToHex(bytes : [Nat8]) : Text {
     let hexDigits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
@@ -136,6 +136,6 @@ module {
       result #= Text.fromChar(hexDigits[high]) # Text.fromChar(hexDigits[low])
     };
 
-    return result
+    result
   }
 }
