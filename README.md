@@ -194,6 +194,7 @@ Performance measurements using `IC.countInstructions()` on Internet Computer rep
 ## References
 
 - [RFC 8439: ChaCha20 and Poly1305 for IETF Protocols](https://tools.ietf.org/html/rfc8439)
+- [C++ Implementation] (https://github.com/mrdcvlsc/ChaCha20-Poly1305)
 - [ChaCha20-Poly1305 Wikipedia](https://en.wikipedia.org/wiki/ChaCha20-Poly1305)
 - [Daniel J. Bernstein's ChaCha specification](https://cr.yp.to/chacha.html)
 - [Daniel J. Bernstein's Poly1305 specification](https://cr.yp.to/mac.html)
