@@ -154,6 +154,7 @@ Performance measurements using `IC.countInstructions()` on Internet Computer rep
 - Uses constant-time operations where applicable
 - **Nonce reuse with the same key is cryptographically dangerous!**
 - **Each encryption operation should use a unique nonce**
+- The presence of the private keys in a canister is not secure as a single malicious node provider could inspect the state of the canister. VetKeys is a more  secure alternative but more expensive.
 
 ## Algorithm Details
 
