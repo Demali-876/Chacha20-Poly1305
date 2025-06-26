@@ -1,9 +1,9 @@
 [package]
-name = "Chacha"
+name = "chacha"
 version = "1.0.0"
-description = ""
-repository = "https://github.com/Demali-876/json"
-keywords = [ "json", "parse", "stringfy", "validate" ]
+description = "An implementation of ChaCha20 & Poly1305 stream cipher"
+repository = "https://github.com/Demali-876/Chacha20-Poly1305"
+keywords = [ "encryption", "decryption", "aead", "poly1305", "chacha20" ]
 license = "MIT"
 
 [dependencies]
