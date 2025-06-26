@@ -1,3 +1,11 @@
+////////////////////////////////////////////////////////////////////////////////
+// File:    Chacha20.mo
+// Author:  Demali Gregg
+// Created: 2025-06
+//
+// Pure-Motoko implementation of the ChaCha20 stream cipher (RFC 8439).
+////////////////////////////////////////////////////////////////////////////////
+
 import Nat32 "mo:base/Nat32";
 import Nat8 "mo:base/Nat8";
 import Nat "mo:base/Nat";
@@ -9,7 +17,7 @@ module Chacha20 {
   public func bitLeftRoll(num : Nat32, n : Nat32) : Nat32 {
     let msb = num << n;
     let lsb = num >> (32 - n);
-    msb | lsb
+    msb | lsb;
   };
 
   // Perform a ChaCha20 quarter round on specified indices of the state
@@ -28,7 +36,7 @@ module Chacha20 {
 
     state[z] := state[z] +% state[w];
     state[y] := state[y] ^ state[z];
-    state[y] := bitLeftRoll(state[y], 7)
+    state[y] := bitLeftRoll(state[y], 7);
   };
 
   // Initialize ChaCha20 state with key, counter, and nonce
@@ -55,13 +63,13 @@ module Chacha20 {
       nonce[2] // Nonce
     ];
 
-    state
+    state;
   };
 
   // Apply 20 rounds of ChaCha20 to the state
   func apply20Rounds(state : [var Nat32]) {
     // Copy original state to add back later
-    let original_state = Array.tabulateVar<Nat32>(16, func(i) {state[i]});
+    let original_state = Array.tabulateVar<Nat32>(16, func(i) { state[i] });
 
     var i = 0;
     while (i < 10) {
@@ -77,13 +85,13 @@ module Chacha20 {
       quarterRound(state, 2, 7, 8, 13);
       quarterRound(state, 3, 4, 9, 14);
 
-      i += 1
+      i += 1;
     };
 
     // Final Addition: state[i] += original_state[i]
     for (i in Iter.range(0, 15)) {
-      state[i] := state[i] +% original_state[i]
-    }
+      state[i] := state[i] +% original_state[i];
+    };
   };
 
   // Convert a 32-bit word to bytes in little-endian order
@@ -93,7 +101,7 @@ module Chacha20 {
       Nat8.fromNat(Nat32.toNat((num >> 8) & 0xFF)), // Byte 1
       Nat8.fromNat(Nat32.toNat((num >> 16) & 0xFF)), // Byte 2
       Nat8.fromNat(Nat32.toNat((num >> 24) & 0xFF)) // Byte 3 (MSB)
-    ]
+    ];
   };
 
   // Utility to convert bytes to a Nat32 word in little-endian order
@@ -104,7 +112,7 @@ module Chacha20 {
     result := result | (Nat32.fromNat(Nat8.toNat(bytes[offset + 1])) << 8);
     result := result | (Nat32.fromNat(Nat8.toNat(bytes[offset + 2])) << 16);
     result := result | (Nat32.fromNat(Nat8.toNat(bytes[offset + 3])) << 24);
-    result
+    result;
   };
 
   // Generate a ChaCha20 keystream block
@@ -113,7 +121,7 @@ module Chacha20 {
     apply20Rounds(state_matrix); // Apply 20 rounds of transformation
 
     // Convert Nat32 state to byte array (64-byte keystream)
-    Array.flatten(Array.tabulate<[Nat8]>(16, func(i) = nat32ToBytes(state_matrix[i])))
+    Array.flatten(Array.tabulate<[Nat8]>(16, func(i) = nat32ToBytes(state_matrix[i])));
   };
 
   // XOR a plaintext with a keystream
@@ -124,22 +132,22 @@ module Chacha20 {
     Array.tabulate<Nat8>(
       length,
       func(i) {
-        plaintext[i] ^ keystream[i]
-      }
-    )
+        plaintext[i] ^ keystream[i];
+      },
+    );
   };
 
   // Encrypt a single block of data
   public func encrypt(key : [Nat32], counter : Nat32, nonce : [Nat32], plaintext : [Nat8]) : [Nat8] {
     let keystream = chachaBlock(key, counter, nonce); // Generate 64-byte keystream
-    xorBytes(plaintext, keystream)
+    xorBytes(plaintext, keystream);
   };
 
   // Encrypt multiple blocks of data
   public func encryptMultiBlock(key : [Nat32], counter : Nat32, nonce : [Nat32], plaintext : [Nat8]) : [Nat8] {
     // Handle empty plaintext case
     if (plaintext.size() == 0) {
-      return []
+      return [];
     };
 
     let blockSize = 64; // ChaCha20 block size in bytes
@@ -158,13 +166,13 @@ module Chacha20 {
 
       // XOR the block with the keystream
       for (j in Iter.range(0, blockLength - 1)) {
-        ciphertext[start + j] := plaintext[start + j] ^ keystream[j]
+        ciphertext[start + j] := plaintext[start + j] ^ keystream[j];
       };
 
-      i += 1
+      i += 1;
     };
 
-    Array.freeze(ciphertext)
+    Array.freeze(ciphertext);
   };
 
   // Utility function to create a key array from byte array
@@ -173,10 +181,10 @@ module Chacha20 {
 
     var key = Array.init<Nat32>(8, 0);
     for (i in Iter.range(0, 7)) {
-      key[i] := bytesToNat32(keyBytes, i * 4)
+      key[i] := bytesToNat32(keyBytes, i * 4);
     };
 
-    Array.freeze(key)
+    Array.freeze(key);
   };
 
   // Utility function to create a nonce array from byte array
@@ -188,6 +196,6 @@ module Chacha20 {
     nonce[1] := bytesToNat32(nonceBytes, 4); // Next 4 bytes
     nonce[2] := bytesToNat32(nonceBytes, 8); // Last 4 bytes
 
-    Array.freeze(nonce)
-  }
-}
+    Array.freeze(nonce);
+  };
+};

@@ -1,3 +1,11 @@
+////////////////////////////////////////////////////////////////////////////////
+// File:    Poly1305.mo
+// Author:  Demali Gregg
+// Created: 2025-06
+//
+// Poly1305 MAC per RFC 8439.
+////////////////////////////////////////////////////////////////////////////////
+
 import Nat8 "mo:base/Nat8";
 import Array "mo:base/Array";
 import Iter "mo:base/Iter";
@@ -19,16 +27,16 @@ module {
     r[15] := r[15] & 0x0F;
     r[4] := r[4] & 0xFC;
     r[8] := r[8] & 0xFC;
-    r[12] := r[12] & 0xFC
+    r[12] := r[12] & 0xFC;
   };
 
   /// Convert little-endian bytes to Nat
   public func leBytes2Nat(bytes : [Nat8]) : Nat {
     var result : Nat = 0;
     for (i in Iter.range(0, bytes.size() - 1)) {
-      result += Nat.pow(256, i) * Nat8.toNat(bytes[i])
+      result += Nat.pow(256, i) * Nat8.toNat(bytes[i]);
     };
-    result
+    result;
   };
 
   /// Convert Nat to little-endian bytes
@@ -39,9 +47,9 @@ module {
       func(i) {
         let byte = Nat8.fromNat(remaining % 256);
         remaining := remaining / 256;
-        byte
-      }
-    )
+        byte;
+      },
+    );
   };
 
   public func generateKey(key : [Nat32], nonce : [Nat32]) : ([Nat8], [Nat8]) {
@@ -56,7 +64,7 @@ module {
     // Next 16 bytes for s
     let s = Array.subArray<Nat8>(keystream, 16, 16);
 
-    (rClamped, s)
+    (rClamped, s);
   };
 
   public func mac(key : [Nat8], msg : [Nat8]) : [Nat8] {
@@ -89,7 +97,7 @@ module {
       // Create a block buffer and copy message bytes
       var blockBuffer = Array.init<Nat8>(BLOCK_SIZE, 0x00);
       for (j in Iter.range(0, blockSize - 1)) {
-        blockBuffer[j] := msg[i + j]
+        blockBuffer[j] := msg[i + j];
       };
 
       let blockBytes = Array.freeze<Nat8>(blockBuffer);
@@ -97,22 +105,22 @@ module {
 
       if (blockSize == BLOCK_SIZE) {
         // Add 2^128 to the number instead of setting a byte outside the array
-        blockInt += Nat.pow(2, 128)
+        blockInt += Nat.pow(2, 128);
       } else {
         blockBuffer[blockSize] := 0x01;
-        blockInt := leBytes2Nat(Array.freeze<Nat8>(blockBuffer))
+        blockInt := leBytes2Nat(Array.freeze<Nat8>(blockBuffer));
       };
 
       // Update accumulator
       accumulator := (accumulator + blockInt) % p;
       accumulator := (accumulator * rInt) % p;
 
-      i += blockSize
+      i += blockSize;
     };
 
     accumulator := (accumulator + sInt) % Nat.pow(2, 128);
 
-    nat2LeBytes(accumulator, 16)
+    nat2LeBytes(accumulator, 16);
   };
 
   public func verify(tag1 : [Nat8], tag2 : [Nat8]) : Bool {
@@ -120,10 +128,10 @@ module {
 
     var result : Nat8 = 0;
     for (i in Iter.range(0, TAG_SIZE - 1)) {
-      result |= (tag1[i] ^ tag2[i])
+      result |= (tag1[i] ^ tag2[i]);
     };
 
-    result == 0
+    result == 0;
   };
   public func bytesToHex(bytes : [Nat8]) : Text {
     let hexDigits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
@@ -133,9 +141,9 @@ module {
       let high = Nat8.toNat(byte >> 4);
       let low = Nat8.toNat(byte & 0x0F);
 
-      result #= Text.fromChar(hexDigits[high]) # Text.fromChar(hexDigits[low])
+      result #= Text.fromChar(hexDigits[high]) # Text.fromChar(hexDigits[low]);
     };
 
-    result
-  }
-}
+    result;
+  };
+};

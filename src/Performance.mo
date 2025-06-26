@@ -23,44 +23,56 @@ actor Performance {
 
   // Core operations
   public func quarterRoundInstructions() : async Nat64 {
-    IC.countInstructions(func() {
-      let mut : [var Nat32] = [var 0x11111111, 0x01020304, 0x9b8d6f43, 0x01234567];
-      Chacha20.quarterRound(mut, 0, 1, 2, 3);
-    })
+    IC.countInstructions(
+      func() {
+        let mut : [var Nat32] = [var 0x11111111, 0x01020304, 0x9b8d6f43, 0x01234567];
+        Chacha20.quarterRound(mut, 0, 1, 2, 3);
+      }
+    );
   };
 
   public func chachaBlockInstructions() : async Nat64 {
-    IC.countInstructions(func() {
-      let _ = Chacha20.chachaBlock(key, 0, nonce);
-    })
+    IC.countInstructions(
+      func() {
+        let _ = Chacha20.chachaBlock(key, 0, nonce);
+      }
+    );
   };
 
   public func keyFromBytesInstructions() : async Nat64 {
-    IC.countInstructions(func() {
-      let _ = Chacha20.keyFromBytes(key32Bytes);
-    })
+    IC.countInstructions(
+      func() {
+        let _ = Chacha20.keyFromBytes(key32Bytes);
+      }
+    );
   };
 
   public func nonceFromBytesInstructions() : async Nat64 {
-    IC.countInstructions(func() {
-      let _ = Chacha20.nonceFromBytes(nonce12Bytes);
-    })
+    IC.countInstructions(
+      func() {
+        let _ = Chacha20.nonceFromBytes(nonce12Bytes);
+      }
+    );
   };
 
   // ChaCha20 encryption by size
   public func chacha20Instructions(size : Nat) : async Nat64 {
     let plaintext = generateRandomBytes(size);
-    IC.countInstructions(func() {
-      let _ = Chacha20.encryptMultiBlock(key, 0, nonce, plaintext);
-    })
+    IC.countInstructions(
+      func() {
+        let _ = Chacha20.encryptMultiBlock(key, 0, nonce, plaintext);
+      }
+    );
   };
 
   // Poly1305 MAC by size
   public func poly1305Instructions(size : Nat) : async Nat64 {
     let message = generateRandomBytes(size);
-    IC.countInstructions(func() {
-      let _ = Poly1305.mac(key32Bytes, message);
-    })
+    IC.countInstructions(
+      func() {
+        let _ = Poly1305.mac(key32Bytes, message);
+      }
+    );
   };
 
   // AEAD by size
@@ -69,10 +81,12 @@ actor Performance {
     let aad = generateRandomBytes(13);
     let iv = generateRandomBytes(8);
     let constant = generateRandomBytes(4);
-    
-    IC.countInstructions(func() {
-      let _ = Chacha20_poly1305.aeadEncrypt(plaintext, aad, key32Bytes, iv, constant);
-    })
+
+    IC.countInstructions(
+      func() {
+        let _ = Chacha20_poly1305.aeadEncrypt(plaintext, aad, key32Bytes, iv, constant);
+      }
+    );
   };
 
   // Benchmark specific sizes
@@ -89,7 +103,7 @@ actor Performance {
     let chachaInstr = await chacha20Instructions(16);
     let polyInstr = await poly1305Instructions(16);
     let aeadInstr = await aeadInstructions(16);
-    
+
     {
       chacha20 = chachaInstr;
       poly1305 = polyInstr;
@@ -99,7 +113,7 @@ actor Performance {
         poly1305 = Float.fromInt64(Int64.fromNat64(polyInstr)) / 16.0;
         aead = Float.fromInt64(Int64.fromNat64(aeadInstr)) / 16.0;
       };
-    }
+    };
   };
 
   public func benchmark64Bytes() : async {
@@ -115,7 +129,7 @@ actor Performance {
     let chachaInstr = await chacha20Instructions(64);
     let polyInstr = await poly1305Instructions(64);
     let aeadInstr = await aeadInstructions(64);
-    
+
     {
       chacha20 = chachaInstr;
       poly1305 = polyInstr;
@@ -125,7 +139,7 @@ actor Performance {
         poly1305 = Float.fromInt64(Int64.fromNat64(polyInstr)) / 64.0;
         aead = Float.fromInt64(Int64.fromNat64(aeadInstr)) / 64.0;
       };
-    }
+    };
   };
 
   public func benchmark1024Bytes() : async {
@@ -141,7 +155,7 @@ actor Performance {
     let chachaInstr = await chacha20Instructions(1024);
     let polyInstr = await poly1305Instructions(1024);
     let aeadInstr = await aeadInstructions(1024);
-    
+
     {
       chacha20 = chachaInstr;
       poly1305 = polyInstr;
@@ -151,7 +165,7 @@ actor Performance {
         poly1305 = Float.fromInt64(Int64.fromNat64(polyInstr)) / 1024.0;
         aead = Float.fromInt64(Int64.fromNat64(aeadInstr)) / 1024.0;
       };
-    }
+    };
   };
 
   public func benchmark4096Bytes() : async {
@@ -167,7 +181,7 @@ actor Performance {
     let chachaInstr = await chacha20Instructions(4096);
     let polyInstr = await poly1305Instructions(4096);
     let aeadInstr = await aeadInstructions(4096);
-    
+
     {
       chacha20 = chachaInstr;
       poly1305 = polyInstr;
@@ -177,7 +191,7 @@ actor Performance {
         poly1305 = Float.fromInt64(Int64.fromNat64(polyInstr)) / 4096.0;
         aead = Float.fromInt64(Int64.fromNat64(aeadInstr)) / 4096.0;
       };
-    }
+    };
   };
 
   // TLS record size
@@ -196,7 +210,7 @@ actor Performance {
     let chachaInstr = await chacha20Instructions(size);
     let polyInstr = await poly1305Instructions(size);
     let aeadInstr = await aeadInstructions(size);
-    
+
     {
       size = size;
       chacha20 = chachaInstr;
@@ -207,7 +221,7 @@ actor Performance {
         poly1305 = Float.fromInt64(Int64.fromNat64(polyInstr)) / Float.fromInt(size);
         aead = Float.fromInt64(Int64.fromNat64(aeadInstr)) / Float.fromInt(size);
       };
-    }
+    };
   };
 
   // Core operations summary
@@ -222,7 +236,7 @@ actor Performance {
       chachaBlock = await chachaBlockInstructions();
       keyFromBytes = await keyFromBytesInstructions();
       nonceFromBytes = await nonceFromBytesInstructions();
-    }
+    };
   };
 
   // Performance comparison for 1KB (most common size)
@@ -243,10 +257,10 @@ actor Performance {
     let chachaInstr = await chacha20Instructions(size);
     let polyInstr = await poly1305Instructions(size);
     let aeadInstr = await aeadInstructions(size);
-    
+
     let overhead = aeadInstr - chachaInstr - polyInstr;
     let overheadPct = Float.fromInt64(Int64.fromNat64(overhead)) / Float.fromInt64(Int64.fromNat64(chachaInstr + polyInstr)) * 100.0;
-    
+
     {
       size = size;
       chacha20Instructions = chachaInstr;
@@ -259,7 +273,7 @@ actor Performance {
         poly1305 = Float.fromInt64(Int64.fromNat64(polyInstr)) / Float.fromInt(size);
         aead = Float.fromInt64(Int64.fromNat64(aeadInstr)) / Float.fromInt(size);
       };
-    }
+    };
   };
 
   // Quick single measurement
@@ -272,7 +286,7 @@ actor Performance {
     let chachaInstr = await chacha20Instructions(size);
     let polyInstr = await poly1305Instructions(size);
     let aeadInstr = await aeadInstructions(size);
-    
+
     {
       size = size;
       chacha20 = {
@@ -287,6 +301,6 @@ actor Performance {
         total = aeadInstr;
         perByte = Float.fromInt64(Int64.fromNat64(aeadInstr)) / Float.fromInt(size);
       };
-    }
+    };
   };
 };
