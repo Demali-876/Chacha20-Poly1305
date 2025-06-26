@@ -189,12 +189,11 @@ Performance measurements using `IC.countInstructions()` on Internet Computer rep
 
 - Performance is **significantly** slower than other implementations (eg. C or  Rust Implementations) :( But still pretty good for motoko
 - Small messages (<256 bytes) have high per-byte overhead
-- Poly1305 requires optimization for production use
 
 ## References
 
 - [RFC 8439: ChaCha20 and Poly1305 for IETF Protocols](https://tools.ietf.org/html/rfc8439)
-- [C++ Implementation] (https://github.com/mrdcvlsc/ChaCha20-Poly1305)
+- [C++ Implementation](https://github.com/mrdcvlsc/ChaCha20-Poly1305)
 - [ChaCha20-Poly1305 Wikipedia](https://en.wikipedia.org/wiki/ChaCha20-Poly1305)
 - [Daniel J. Bernstein's ChaCha specification](https://cr.yp.to/chacha.html)
 - [Daniel J. Bernstein's Poly1305 specification](https://cr.yp.to/mac.html)
