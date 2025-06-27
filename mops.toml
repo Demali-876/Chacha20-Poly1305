@@ -1,6 +1,6 @@
 [package]
 name = "chacha"
-version = "1.0.0"
+version = "1.0.1"
 description = "An implementation of ChaCha20 & Poly1305 stream cipher"
 repository = "https://github.com/Demali-876/Chacha20-Poly1305"
 keywords = [ "encryption", "decryption", "aead", "poly1305", "chacha20" ]
