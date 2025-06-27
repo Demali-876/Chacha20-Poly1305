@@ -23,7 +23,7 @@ The implementation follows RFC 8439 specifications and includes comprehensive te
 ## Installation
 
 ```bash
-mops add Chacha
+mops add chacha
 ```
 
 ## Usage
@@ -31,7 +31,7 @@ mops add Chacha
 ### Basic ChaCha20 Encryption
 
 ```motoko
-import Chacha20 "mo:Chacha/Chacha";
+import Chacha20 "mo:chacha/Chacha";
 
 // Generate key and nonce
 let keyBytes = [/* 32 bytes */];
@@ -50,7 +50,7 @@ let decrypted = Chacha20.encryptMultiBlock(key, 0, nonce, ciphertext);
 ### Poly1305 Message Authentication
 
 ```motoko
-import Poly1305 "mo:Chacha/Poly1305";
+import Poly1305 "mo:chacha/Poly1305";
 
 let key = [/* 32 bytes */];
 let message = [/* your message */];
@@ -65,7 +65,7 @@ let isValid = Poly1305.verify(tag, expectedTag);
 ### AEAD (Authenticated Encryption)
 
 ```motoko
-import Chacha20_poly1305 "mo:Chcha";
+import Chacha20_poly1305 "mo:chacha";
 
 let plaintext = [/* your data */];
 let aad = [/* associated data */];
